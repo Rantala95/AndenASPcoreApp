@@ -1,18 +1,37 @@
 ﻿@{
     ViewData["Title"] = "Your privacy is our priority";
 }
-<h1>@ViewData["Title"]</h1>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
 <style>
     body {
-        /*background-image: url(https://thumbs.gfycat.com/KindBouncyKoi-max-1mb.gif);*/
-       background-color:#808080;
-        /*background-size: auto;
-        background-repeat: repeat;*/
+            background-color: #808080;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            color: #FFFFFF;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+
+        p {
+            font-size: 24px;
+            margin-bottom: 20px;
     }
 </style>
+</head>
 <body>
-
-    <div class="text-center" style="color:#FFFFFF">
+    <div class="container">
         <h1>Privacy</h1>
         <p>
             Privacy is a critical concern for StreamWave, and we are committed to protecting our users' personal information and data. We understand that our users trust us with their information, and we take this responsibility seriously.
@@ -32,6 +51,6 @@
         <p>
             In summary, StreamWave is committed to protecting the privacy and security of our users' personal information and data. We use industry-standard security measures to protect user data, only collect and use the minimum amount of data necessary, and are transparent about our data collection practices. Users have control over their data on StreamWave and can manage it at any time.
         </p>
-
     </div>
 </body>
+</html>

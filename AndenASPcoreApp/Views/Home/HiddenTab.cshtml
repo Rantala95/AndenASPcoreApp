@@ -1,3 +1,165 @@
 ﻿<head>
-    <script src="~/Views/Home/Movies.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+
+    <style>
+        body {
+            background: #f2f2f2
+            -webkit-filter: blur(5px);
+        }
+
+        .description {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            /* add any other styling you need for your description */
+        }
+
+    .movie-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .movie-card {
+        width: 300px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    .movie-image {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .movie-info {
+        padding: 10px;
+    }
+
+    .movie-title {
+        font-size: 24px;
+        margin: 0;
+        padding: 0;
+        font-weight: 600;
+    }
+
+    .movie-release-date {
+        font-size: 16px;
+        margin: 10px 0;
+        padding: 0;
+        font-weight: 500;
+    }
+
+    .movie-overview {
+        font-size: 16px;
+        margin: 0;
+        padding: 0;
+        font-weight: 400;
+    }
+</style>
 </head>
+
+<body>
+
+    <label for="search">Search:</label>
+    <input type="text" id="search">
+
+    <div id="search-results"></div>
+
+    <div id="movie-container"></div>
+
+
+    <script>
+                .ui - autocomplete {
+            z - index: 9999;
+        }
+
+        var api_key = "72793b412d709f7c5af657c1cdab98d3";
+        var api_url = "https://api.themoviedb.org/3/";
+
+        // Add an autocomplete function to the search input field
+        $("#search").autocomplete({
+            source: function (request, response) {
+                var search_url = api_url + "search/multi?api_key=" + api_key + "&query=" + encodeURIComponent(request.term);
+                $.get(search_url, function (results) {
+                    var filtered_results = results.results.filter(function (result) {
+                        return result.media_type === "movie" || result.media_type === "tv";
+                    });
+                    var formatted_results = filtered_results.map(function (result) {
+                        return {
+                            label: result.title || result.name,
+                            value: result.id
+                        };
+                    });
+                    response(formatted_results);
+                });
+            },
+            minLength: 3,
+            select: function (event, ui) {
+                var media_type = ui.item.media_type;
+                var media_info_url = api_url + media_type + "/" + ui.item.id + "?api_key=" + api_key;
+                $.get(media_info_url, function (media_info) {
+                    // Display the media information in a modal dialog
+                    var media_dialog = $("<div>").attr("title", media_info.title || media_info.name);
+                    var media_dialog_content = $("<p>").html("<b>Release Date:</b> " + (media_info.release_date || media_info.first_air_date) + "<br>" + "<b>Overview:</b> " + media_info.overview);
+                    media_dialog.append(media_dialog_content);
+                    media_dialog.dialog();
+                });
+            }
+        });
+    </script>
+</body>
+
+<body>
+    <script>
+        var api_key = "72793b412d709f7c5af657c1cdab98d3";
+        var api_url = "https://api.themoviedb.org/3/";
+        var genre_url = api_url + "genre/movie/list?api_key=" + api_key;
+        var movie_url = api_url + "movie/popular?api_key=" + api_key;
+
+        // Retrieve the list of popular movies
+        $.get(movie_url, function (movies) {
+            // Loop through the movies and create a card for each one
+            var movie_list = $("<div>").addClass("movie-list");
+            $.each(movies.results, function (i, movie) {
+                var movie_card = $("<div>").addClass("movie-card");
+                var movie_image = $("<img>").addClass("movie-image").attr("src", "https://image.tmdb.org/t/p/w185/" + movie.poster_path);
+                var movie_info = $("<div>").addClass("movie-info");
+                var movie_title = $("<h2>").addClass("movie-title").html('<a href="https://www.imdb.com/find/?q=' + encodeURIComponent(movie.title) + '" target="_blank">' + movie.title + '</a>');
+                var movie_release_date = $("<p>").addClass("movie-release-date").text("Release Date: " + movie.release_date);
+                var movie_overview = $("<p>").addClass("movie-overview").text(movie.overview);
+                movie_info.append(movie_title, movie_release_date, movie_overview);
+                movie_card.append(movie_image, movie_info);
+                movie_list.append(movie_card);
+            });
+
+            // Add the list of movies to the page
+            $("body").append(movie_list);
+
+            // Add a click event to each movie card to retrieve more information about the movie
+            $(document).on("click", ".movie-card", function (event) {
+                var movie_id = $(this).data("id");
+                var movie_info_url = api_url + "movie/" + movie_id + "?api_key=" + api_key;
+                $.get(movie_info_url, function (movie_info) {
+                    // Display the movie information in a modal dialog
+                    var movie_dialog = $("<div>").attr("title", movie_info.title);
+                    var movie_dialog_content = $("<p>").html("<b>Release Date:</b> " + movie_info.release_date + "<br>" + "<b>Overview:</b> " + movie_info.overview);
+                    movie_dialog.append(movie_dialog_content);
+                    movie_dialog.dialog();
+                });
+            });
+        });
+
+    </script>
+</body>
