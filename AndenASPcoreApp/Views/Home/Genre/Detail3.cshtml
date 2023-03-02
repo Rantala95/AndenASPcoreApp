@@ -1,0 +1,31 @@
+﻿<body>
+    <script>
+        var api_key = "72793b412d709f7c5af657c1cdab98d3";
+        var api_url = "https://api.themoviedb.org/3/";
+        var genre_id = @ViewBag.GenreId; // get the genre ID from the ViewBag
+        var genre_name = "@ViewBag.GenreName"; // get the genre name from the ViewBag
+        var movie_url = api_url + "discover/movie?api_key=" + api_key + "&with_genres=" + genre_id;
+
+        // Retrieve the list of movies in the selected genre
+        $.get(movie_url, function (movies) {
+            // Loop through the movies and create a card for each one
+            var movie_list = $("<div>").addClass("movie-list");
+            $.each(movies.results, function (i, movie) {
+                var movie_card = $("<div>").addClass("movie-card");
+                var movie_image = $("<img>").addClass("movie-image").attr("src", "https://image.tmdb.org/t/p/w185/" + movie.poster_path);
+                var movie_info = $("<div>").addClass("movie-info");
+                var movie_title = $("<h2>").addClass("movie-title").html('<a href="https://www.google.com/search?q=' + encodeURIComponent(movie.title) + '" target="_blank">' + movie.title + '</a>');
+                var movie_release_date = $("<p>").addClass("movie-release-date").text("Release Date: " + movie.release_date);
+                var movie_overview = $("<p>").addClass("movie-overview").text(movie.overview);
+                movie_info.append(movie_title, movie_release_date, movie_overview);
+                movie_card.append(movie_image, movie_info);
+                movie_list.append(movie_card);
+            });
+
+            // Add the list of movies to the page
+            $("#movie-container").append(movie_list);
+            $("h1").text("Movies in " + genre_name); // Set the page title to the genre name
+        });
+
+    </script>
+</body>

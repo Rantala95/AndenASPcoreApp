@@ -30,10 +30,16 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Sekrit">Sekrit</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HiddenTab">Top</a>
                             <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HiddenTab">dokument</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HiddenTab">Movies</a>
                             </li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Genre">Genre</a>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Genre"></a>
+                            </li>
+                        
+
                         }
 
                     </ul>

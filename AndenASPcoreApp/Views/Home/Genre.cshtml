@@ -1,0 +1,25 @@
+﻿@{
+    // Define API endpoint and API key
+    string endpoint = "https://api.themoviedb.org/3/genre/movie/list";
+    string apiKey = "72793b412d709f7c5af657c1cdab98d3";
+
+    // Set up HTTP client and request message
+    HttpClient httpClient = new HttpClient();
+    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"{endpoint}?api_key={apiKey}");
+
+    // Send request and deserialize response
+    HttpResponseMessage response = await httpClient.SendAsync(request);
+    response.EnsureSuccessStatusCode();
+    string responseBody = await response.Content.ReadAsStringAsync();
+    dynamic responseData = Newtonsoft.Json.JsonConvert.DeserializeObject(responseBody);
+    var genres = responseData.genres;
+}
+
+<h1>Movie Genres</h1>
+
+<ul>
+    @foreach (var genre in genres)
+    {
+        <li><a href="/Movies/Genre/@genre.id">@genre.name</a></li>
+    }
+</ul>

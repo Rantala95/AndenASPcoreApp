@@ -1,9 +1,11 @@
 ﻿using AndenASPcoreApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace AndenASPcoreApp.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -42,6 +44,12 @@ namespace AndenASPcoreApp.Controllers
         public ActionResult Genre()
         {
             return View();
+        }
+
+        [Route("Movies/Genre/{genreId}")]
+        public ActionResult GenreDetails(int genreId)
+        {
+            return View("Genre/Detail");
         }
     }
 }

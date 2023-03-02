@@ -48,69 +48,35 @@
         }
     </style>
 </head>
-<body>
-    <label f<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
-
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AndenASPcoreApp.styles.css" asp-append-version="true" />or="search">Search:</label>
-    <input type="text" id="search">
-
-    <div id="search-results"></div>
-
-    <div id="movie-container"></div>
-
-
-    <script>
-        var api_key = "72793b412d709f7c5af657c1cdab98d3";
-        var api_url = "https://api.themoviedb.org/3/";
-
-        // Add an autocomplete function to the search input field
-        $("#search").autocomplete({
-            source: function (request, response) {
-                var search_url = api_url + "search/multi?api_key=" + api_key + "&query=" + encodeURIComponent(request.term);
-                $.get(search_url, function (results) {
-                    var filtered_results = results.results.filter(function (result) {
-                        return result.media_type === "movie" || result.media_type === "tv";
-                    });
-                    var formatted_results = filtered_results.map(function (result) {
-                        return {
-                            label: result.title || result.name,
-                            value: result.id
-                        };
-                    });
-                    response(formatted_results);
-                });
-            },
-            minLength: 3,
-            select: function (event, ui) {
-                var media_type = ui.item.media_type;
-                var media_info_url = api_url + media_type + "/" + ui.item.id + "?api_key=" + api_key;
-                $.get(media_info_url, function (media_info) {
-                    // Display the media information in a modal dialog
-                    var media_dialog = $("<div>").attr("title", media_info.title || media_info.name);
-                    var media_dialog_content = $("<p>").html("<b>Release Date:</b> " + (media_info.release_date || media_info.first_air_date) + "<br>" + "<b>Overview:</b> " + media_info.overview);
-                    media_dialog.append(media_dialog_content);
-                    media_dialog.dialog();
-                });
-            }
-        });
-    </script>
-</body>
 
 <body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <script>
+
+
+
         var api_key = "72793b412d709f7c5af657c1cdab98d3";
         var api_url = "https://api.themoviedb.org/3/";
+        var genre_id = Number(location.href.split("/").pop() || 0);
+        console.log("1234");
         //var genre_url = api_url + "genre/movie/list?api_key=" + api_key;
         var movie_url = api_url + "movie/popular?api_key=" + api_key;
 
         // Retrieve the list of popular movies
         $.get(movie_url, function (movies) {
+            //var genredMovies = movies.results.filter(movie => movie.genre_ids.includes(genre_id))
+            var genredMovies = movies.results.filter(function (movie) {
+                return movie.genre_ids.includes(genre_id)
+            });
+            //$.each(movies.results, function(index, movie) {
+            //    if (movie.genre_ids.includes(genre_id)) {
+            //        genredMovies.push(movie);
+            //    }
+            //});
             // Loop through the movies and create a card for each one
             var movie_list = $("<div>").addClass("movie-list");
-            $.each(movies.results, function (i, movie) {
+            $.each(genredMovies, function (i, movie) {
                 var movie_card = $("<div>").addClass("movie-card");
                 var movie_image = $("<img>").addClass("movie-image").attr("src", "https://image.tmdb.org/t/p/w185/" + movie.poster_path);
                 var movie_info = $("<div>").addClass("movie-info");

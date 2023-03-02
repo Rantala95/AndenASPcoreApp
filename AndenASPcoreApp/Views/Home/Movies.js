@@ -52,7 +52,7 @@ function isValidUrl(url) {
             $("#movie-container1").html("<h2>" + movies[0].Title + "</h2> <img src='" + movies[0].Poster + "'>");
         } else {
             console.log("Error: Invalid poster URL for movie " + movies[0].Title);
-}
+        }
         if (isValidUrl(movies[1].Poster)) {
             $("#movie-container2").html("<h2>" + movies[1].Title + "</h2> <img src='" + movies[1].Poster + "'>");
         } else {
