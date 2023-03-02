@@ -38,5 +38,10 @@ namespace AndenASPcoreApp.Controllers
         {
             return View();
         }
+
+        public ActionResult Genre()
+        {
+            return View();
+        }
     }
 }

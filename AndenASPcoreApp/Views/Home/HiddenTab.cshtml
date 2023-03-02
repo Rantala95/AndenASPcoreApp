@@ -3,76 +3,58 @@
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap">
+    <style>
+        .movie-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .movie-card {
+            width: 300px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .movie-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .movie-info {
+            padding: 10px;
+        }
+
+        .movie-title {
+            font-size: 24px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .movie-release-date {
+            font-size: 16px;
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        .movie-overview {
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <label f<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 
-    <style>
-        body {
-            background: #f2f2f2
-            -webkit-filter: blur(5px);
-        }
-
-        .description {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-            /* add any other styling you need for your description */
-        }
-
-    .movie-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .movie-card {
-        width: 300px;
-        margin: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        overflow: hidden;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        font-family: 'Quicksand', sans-serif;
-    }
-
-    .movie-image {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-    .movie-info {
-        padding: 10px;
-    }
-
-    .movie-title {
-        font-size: 24px;
-        margin: 0;
-        padding: 0;
-        font-weight: 600;
-    }
-
-    .movie-release-date {
-        font-size: 16px;
-        margin: 10px 0;
-        padding: 0;
-        font-weight: 500;
-    }
-
-    .movie-overview {
-        font-size: 16px;
-        margin: 0;
-        padding: 0;
-        font-weight: 400;
-    }
-</style>
-</head>
-
-<body>
-
-    <label for="search">Search:</label>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AndenASPcoreApp.styles.css" asp-append-version="true" />or="search">Search:</label>
     <input type="text" id="search">
 
     <div id="search-results"></div>
@@ -81,10 +63,6 @@
 
 
     <script>
-                .ui - autocomplete {
-            z - index: 9999;
-        }
-
         var api_key = "72793b412d709f7c5af657c1cdab98d3";
         var api_url = "https://api.themoviedb.org/3/";
 
@@ -136,7 +114,7 @@
                 var movie_card = $("<div>").addClass("movie-card");
                 var movie_image = $("<img>").addClass("movie-image").attr("src", "https://image.tmdb.org/t/p/w185/" + movie.poster_path);
                 var movie_info = $("<div>").addClass("movie-info");
-                var movie_title = $("<h2>").addClass("movie-title").html('<a href="https://www.imdb.com/find/?q=' + encodeURIComponent(movie.title) + '" target="_blank">' + movie.title + '</a>');
+                var movie_title = $("<h2>").addClass("movie-title").html('<a href="https://www.google.com/search?q=' + encodeURIComponent(movie.title) + '" target="_blank">' + movie.title + '</a>');
                 var movie_release_date = $("<p>").addClass("movie-release-date").text("Release Date: " + movie.release_date);
                 var movie_overview = $("<p>").addClass("movie-overview").text(movie.overview);
                 movie_info.append(movie_title, movie_release_date, movie_overview);
