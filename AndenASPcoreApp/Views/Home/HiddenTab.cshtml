@@ -4,6 +4,9 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 
     <style>
+        body {
+            background: linear-gradient(to bottom, #f7b731, #fc5c7d, #6a82fb);
+        }
         .movie-list {
             display: flex;
             flex-wrap: wrap;
@@ -11,6 +14,7 @@
         }
 
         .movie-card {
+            background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
             width: 300px;
             margin: 10px;
             border: 1px solid #ccc;
@@ -46,15 +50,28 @@
             margin: 0;
             padding: 0;
         }
+
+        h2 {
+            font-size: 72px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898;
+            background-blend-mode: multiply,multiply;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p2 {
+            font-family: Monospace;
+        }
+
     </style>
 </head>
 <body>
-    <label f<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AndenASPcoreApp.styles.css" asp-append-version="true" />or="search">Search:</label>
+    <link rel="stylesheet" href="~/AndenASPcoreApp.styles.css" asp-append-version="true" />or="search">Search:
     <input type="text" id="search">
 
     <div id="search-results"></div>

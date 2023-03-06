@@ -89,10 +89,8 @@
                 movie_card.append(movie_image, movie_info);
                 movie_list.append(movie_card);
             });
-
             // Add the list of movies to the page
             $("body").append(movie_list);
-
             // Add a click event to each movie card to retrieve more information about the movie
             $(document).on("click", ".movie-card", function (event) {
                 var movie_id = $(this).data("id");
@@ -106,6 +104,5 @@
                 });
             });
         });
-
     </script>
 </body>
