@@ -1,25 +1,174 @@
 ﻿@{
-    // Define API endpoint and API key
-    string endpoint = "https://api.themoviedb.org/3/genre/movie/list";
+    // Define API endpoints and API key
+    string genreEndpoint = "https://api.themoviedb.org/3/genre/movie/list";
+    string imageEndpoint = "https://api.themoviedb.org/3/discover/movie";
     string apiKey = "72793b412d709f7c5af657c1cdab98d3";
 
-    // Set up HTTP client and request message
+    // Set up HTTP client and request message for genres
     HttpClient httpClient = new HttpClient();
-    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"{endpoint}?api_key={apiKey}");
+    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"{genreEndpoint}?api_key={apiKey}");
 
-    // Send request and deserialize response
+    // Send request and deserialize response for genres
     HttpResponseMessage response = await httpClient.SendAsync(request);
     response.EnsureSuccessStatusCode();
     string responseBody = await response.Content.ReadAsStringAsync();
-    dynamic responseData = Newtonsoft.Json.JsonConvert.DeserializeObject(responseBody);
-    var genres = responseData.genres;
+    dynamic genresData = Newtonsoft.Json.JsonConvert.DeserializeObject(responseBody);
+    var genres = genresData.genres;
+
+    // Set up HTTP client and request message for images
+    httpClient = new HttpClient();  // NEW: create a new client
+    request = new HttpRequestMessage(HttpMethod.Get, $"{imageEndpoint}?api_key={apiKey}&with_genres=");
+
+    // Loop through genres and add image URL to each genre object
+    foreach (var genre in genres)
+    {
+        // Send request for images with current genre ID
+        HttpResponseMessage imageResponse = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, $"{imageEndpoint}?api_key={apiKey}&with_genres={genre.id}"));
+        imageResponse.EnsureSuccessStatusCode();
+        string imageResponseBody = await imageResponse.Content.ReadAsStringAsync();
+        dynamic imageData = Newtonsoft.Json.JsonConvert.DeserializeObject(imageResponseBody);
+        var image = imageData.results[0].poster_path;
+
+        // Add image URL to current genre object
+        genre.image = $"https://image.tmdb.org/t/p/w500/{image}";
+    }
+    // Set up HTTP client and request message for images
+    httpClient = new HttpClient();  // NEW: create a new client
+    request = new HttpRequestMessage(HttpMethod.Get, $"{imageEndpoint}?api_key={apiKey}&with_genres=");
+
+    // Set to keep track of used image URLs
+    HashSet<string> usedImages = new HashSet<string>();
+
+    // Loop through genres and add image URL to each genre object
+    foreach (var genre in genres)
+    {
+        // Send request for images with current genre ID
+        HttpResponseMessage imageResponse = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, $"{imageEndpoint}?api_key={apiKey}&with_genres={genre.id}"));
+        imageResponse.EnsureSuccessStatusCode();
+        string imageResponseBody = await imageResponse.Content.ReadAsStringAsync();
+        dynamic imageData = Newtonsoft.Json.JsonConvert.DeserializeObject(imageResponseBody);
+
+        // Loop through images and select a unique image URL
+        var images = imageData.results;
+        string image = null;
+        foreach (var i in images)
+        {
+            string imageUrl = $"https://image.tmdb.org/t/p/w500/{i.poster_path}";
+            if (!usedImages.Contains(imageUrl))
+            {
+                image = i.poster_path;
+                usedImages.Add(imageUrl);
+                break;
+            }
+        }
+
+        // If no unique image URL is found, use the first image URL
+        if (image == null && images.Count > 0)
+        {
+            image = images[0].poster_path;
+        }
+
+        // Add image URL to current genre object
+        genre.image = $"https://image.tmdb.org/t/p/w500/{image}";
+    }
+
+}
+<style>
+    body {
+        background-color: #1C1C1C;
+        background-image: linear-gradient(135deg, #2F2F2F 25%, transparent 25%, transparent 50%, #2F2F2F 50%, #2F2F2F 75%, transparent 75%, transparent), linear-gradient(45deg, #2F2F2F 25%, transparent 25%, transparent 50%, #2F2F2F 50%, #2F2F2F 75%, transparent 75%, transparent);
+        background-size: 20px 20px;
+        background-position: 0 0, 10px 10px;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #FFFFFF;
+    }
+
+    a {
+        color: #FFFFFF;
+        text-decoration: none;
+        border-bottom: 2px solid #FFFFFF;
+        transition: border-bottom 0.2s ease-in-out;
+    }
+
+        a:hover {
+            border-bottom: 2px solid #FF4500;
+        }
+
+    .genre-container {
+        position: relative;
+    }
+
+    .genre-list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+
+        .genre-list li {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            max-width: 300px;
+            flex: 1 1 300px;
+        }
+
+            .genre-list li:hover {
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+
+        .genre-list img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .genre-list h2 {
+            margin: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+        }
+
+        .genre-list a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .genre-list p {
+            margin: 10px 0;
+            font-size: 16px;
+            text-align: center;
+            color: #555;
 }
 
+</style>
+
+<div class="genre-container">
 <h1>Movie Genres</h1>
 
-<ul>
+    <ul class="genre-list">
     @foreach (var genre in genres)
     {
-        <li><a href="/Movies/Genre/@genre.id">@genre.name</a></li>
+            <li>
+                <a href="/Movies/Genre/@genre.id">
+                    <img src="@genre.image" alt="@genre.name" />
+                    <h2>@genre.name</h2>
+                </a>
+            </li>
     }
 </ul>
+</div>
